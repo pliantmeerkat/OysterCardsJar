@@ -2,13 +2,18 @@ package OysterCards;
 
 public class Oyster {
 	
-	static int MAXIMUM_BALANCE = 90; // hard-coded maximum balance
+	// constants
+	static int MAXIMUM_BALANCE = 90; 
 	static int MINIMUM_FARE = 1;
 	
+	//variable declarations
+	public Station entry_station;
 	public int balance;
+	public boolean in_journey;
 	
 	public Oyster() {
 		balance = 0;
+		in_journey = false;
 	}
 	
 	public int show_balance(){
@@ -16,22 +21,24 @@ public class Oyster {
 	}
 	
 	public void top_up(int amount) {
-		try {
-			if(amount + balance > MAXIMUM_BALANCE) {
-				throw new ArithmeticException("cannot top up: maximum balance");
-			}
-			else {
-				balance += amount;
-			}
+		
+		if(amount + balance > MAXIMUM_BALANCE) {
+			throw new ArithmeticException("Cannot top up more than max balance");
 		}
-		catch(ArithmeticException e) {
-			System.out.println("cannot top up: maximum balance");
+		else {
+			balance += amount;
 		}
+		
 	}
 	
-	public void tap_in(){
-		if(a)
+	public void tap_in(Station station){
+		
+		if(balance < MINIMUM_FARE) {
+			throw new ArithmeticException("Please top up");
+		}
+		else {
+			in_journey = true ;
+			entry_station = station;
+		}
 	}
-	
-
 }

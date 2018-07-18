@@ -1,9 +1,10 @@
 package OysterCards;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.*;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
@@ -12,13 +13,13 @@ import org.junit.rules.ExpectedException;
 class Oyster_test {
 	
 	Oyster oyster;
+	Station station;
 	
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 	
 	@BeforeEach
 	void initialize() {
 		oyster = new Oyster();
+		station = new Station();
 	}
 
 	@Test
@@ -33,18 +34,33 @@ class Oyster_test {
 		assertEquals(1, oyster.show_balance());
 		
 	}
+
+	@Test
+	void TopUp_Maximum() {
+		try {
+			oyster.top_up(1000);
+			fail("no exception thrown");
+		} catch(ArithmeticException e) {
+			assertThat(e.getMessage(), is("Cannot top up more than max balance")) ;
+		}
+	}
 	
 	@Test
-	void TapI() {
-		oyster.tap_in();
+	void TapIn() {
+		oyster.balance = Oyster.MINIMUM_FARE; //set balance to minimum
+		oyster.tap_in(station); // simulate a tap in
+		assertEquals(true, oyster.in_journey);
+		assertEquals(station, oyster.entry_station);
 	}
 	
-	/* will be added once i work out exception testing
-	@Test(Assertions.assertThrows(ArithmeticException.class, () -> m.div(5, 0)));
-	void TopUp_Maximum() {
-		
+	@Test
+	void TapInNoBalance() {
+		try {
+			oyster.tap_in(station);
+			fail("no exception thrown");
+		} catch(ArithmeticException e) {
+			assertThat(e.getMessage(), is("Please top up"));
+		}
 	}
-	*/
-	
 	
 }
